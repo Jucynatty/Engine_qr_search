@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Engine Details</title>
+    <style>
+      :root {
+        --primary: #2c7a7b;
+        --bg: #252525;
+        --card: #ffffff;
+        --accent: #319795;
+        --text: #2d3748;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        padding: 1rem;
+        margin: 0;
+      }
+
+      h1 {
+        text-align: center;
+        color: var(--primary);
+        margin-bottom: 1rem;
+      }
+
+      #engine-details {
+        max-width: 500px;
+        background-color: var(--card);
+        margin: 0 auto;
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      #engine-details p,
+      #engine-details label {
+        margin-bottom: 0.5rem;
+      }
+
+      #engine-details input {
+        width: 100%;
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1rem;
+      }
+
+      #engine-details button {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 1rem;
+        margin-bottom: 0.75rem;
+        background-color: var(--accent);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+      }
+
+      #engine-details button:hover {
+        background-color: var(--primary);
+      }
+
+      #engine-details a {
+        display: block;
+        text-align: center;
+        margin-top: 1rem;
+        color: var(--primary);
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Engine Details</h1>
+    <div id="engine-details"></div>
+
+    <script type="module">
+      const pathParts = window.location.pathname.split("/");
+      const engineId = pathParts[pathParts.length - 1];
+
+      const engineDetailsDiv = document.getElementById("engine-details");
+
+      const loadEngine = async () => {
+        try {
+          const res = await fetch(`/api/engines/${engineId}`);
+          if (!res.ok) {
+            engineDetailsDiv.innerHTML = "<p>Engine not found</p>";
+            return;
+          }
+
+          const engine = await res.json();
+
+          engineDetailsDiv.innerHTML = `
+          <p><strong>Serial Number:</strong> ${engine.serialNumber}</p>
+          <p>
+            <label for="model">Model:</label>
+            <input type="text" id="model" value="${engine.model || ""}" />
+          </p>
+          <p>
+            <label for="year">Year:</label>
+            <input type="number" id="year" value="${engine.year || ""}" />
+          </p>
+          <button id="update-btn">✏️ Update</button>
+          <button id="delete-btn">🗑️ Delete</button>
+          <a href="/">← Back</a>
+        `;
+
+          document
+            .getElementById("update-btn")
+            .addEventListener("click", async () => {
+              const model = document.getElementById("model").value;
+              const year = document.getElementById("year").value;
+
+              const updateRes = await fetch(`/api/engines/${engineId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ model, year }),
+              });
+
+              if (updateRes.ok) {
+                alert("Engine updated!");
+                loadEngine(); // reload data
+              } else {
+                alert("Failed to update engine.");
+              }
+            });
+
+          document
+            .getElementById("delete-btn")
+            .addEventListener("click", async () => {
+              const confirmDelete = confirm(
+                "Are you sure you want to delete this engine?"
+              );
+              if (!confirmDelete) return;
+
+              const deleteRes = await fetch(`/api/engines/${engineId}`, {
+                method: "DELETE",
+              });
+
+              if (deleteRes.ok) {
+                alert("Engine deleted!");
+                window.location.href = "/";
+              } else {
+                alert("Failed to delete engine.");
+              }
+            });
+        } catch (err) {
+          engineDetailsDiv.innerHTML = `<p>Error: ${err.message}</p>`;
+        }
+      };
+
+      loadEngine();
+    </script>
+  </body>
+</html>

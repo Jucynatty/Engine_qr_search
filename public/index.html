@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Engine Tracker</title>
+    <style>
+      :root {
+        --primary: #2c7a7b;
+        --bg: #252525;
+        --card: #ffffff;
+        --accent: #319795;
+        --text: #2d3748;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        padding: 1rem;
+        margin: 0;
+      }
+
+      h1 {
+        text-align: center;
+        color: var(--primary);
+        margin-bottom: 1rem;
+      }
+
+      form {
+        background-color: var(--card);
+        max-width: 500px;
+        margin: 0 auto 2rem auto;
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      form input,
+      form button {
+        width: 100%;
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1rem;
+      }
+
+      form button {
+        background-color: var(--accent);
+        color: white;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+      }
+
+      form button:hover {
+        background-color: var(--primary);
+      }
+
+      ul#engine-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 auto;
+        max-width: 800px;
+      }
+
+      li {
+        background-color: var(--card);
+        border: 1px solid #ccc;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        border-radius: 6px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      li span {
+        font-weight: bold;
+      }
+
+      li img {
+        margin-top: 0.5rem;
+        max-width: 80px;
+      }
+
+      @media (max-width: 600px) {
+        li {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        li img {
+          margin-left: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Engine Serial Tracker</h1>
+
+    <form id="engine-form">
+      <input
+        type="text"
+        id="serialNumber"
+        placeholder="Serial Number"
+        required
+      />
+      <input type="text" id="model" placeholder="Model" />
+      <input type="number" id="year" min="0" placeholder="Year" />
+      <button type="submit">Add Engine</button>
+    </form>
+
+    <ul id="engine-list"></ul>
+
+    <script src="index.js" type="module"></script>
+  </body>
+</html>
