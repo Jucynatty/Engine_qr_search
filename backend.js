@@ -4,7 +4,6 @@ import qr from 'qr-image';
 import admin from 'firebase-admin';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { readFileSync } from 'fs';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -69,7 +68,7 @@ app.get('/api/engines', async (_, res) => {
 // Generate QR code for engine
 app.get('/api/qr/:id', (req, res) => {
   const { id } = req.params;
-  const hostUrl = process.env.HOST_URL || 'http://localhost:3000';
+  const hostUrl = process.env.HOST_URL;
   const qrSvg = qr.image(`${hostUrl}/engine/${id}`, { type: 'png' });
   res.type('png');
   qrSvg.pipe(res);
@@ -121,8 +120,6 @@ app.get('/api/engines/:id', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
-
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
