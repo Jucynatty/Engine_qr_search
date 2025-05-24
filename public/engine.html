@@ -101,30 +101,38 @@
           const engine = await res.json();
 
           engineDetailsDiv.innerHTML = `
-          <p><strong>Serial Number:</strong> ${engine.serialNumber}</p>
-          <p>
-            <label for="model">Model:</label>
-            <input type="text" id="model" value="${engine.model || ""}" />
-          </p>
-          <p>
-            <label for="year">Year:</label>
-            <input type="number" id="year" value="${engine.year || ""}" />
-          </p>
-          <button id="update-btn">✏️ Update</button>
-          <button id="delete-btn">🗑️ Delete</button>
-          <a href="/"> ← Back</a>
-        `;
+            <p>
+              <label for="serialNumber">Serial Number:</label>
+              <input type="text" id="serialNumber" value="${
+                engine.serialNumber || ""
+              }" />
+            </p>
+            <p>
+              <label for="model">Model:</label>
+              <input type="text" id="model" value="${engine.model || ""}" />
+            </p>
+            <p>
+              <label for="year">Year:</label>
+              <input type="number" id="year" value="${engine.year || ""}" />
+            </p>
+            <button id="update-btn">✏️ Update</button>
+            <button id="delete-btn">🗑️ Delete</button>
+            <a href="/">← Back</a>
+          `;
 
           document
             .getElementById("update-btn")
             .addEventListener("click", async () => {
-              const model = document.getElementById("model").value;
-              const year = document.getElementById("year").value;
+              const serialNumber = document
+                .getElementById("serialNumber")
+                .value.trim();
+              const model = document.getElementById("model").value.trim();
+              const year = document.getElementById("year").value.trim();
 
               const updateRes = await fetch(`/api/engines/${engineId}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ model, year }),
+                body: JSON.stringify({ serialNumber, model, year }),
               });
 
               if (updateRes.ok) {

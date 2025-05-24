@@ -11,15 +11,6 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Initialize Firebase Admin SDK
-// const serviceAccount = JSON.parse(
-//   readFileSync('./firebase-key.json', 'utf8')
-// );
-
-// admin.initializeApp({
-//   credential: admin.credential.cert(serviceAccount),
-// });
-
 admin.initializeApp({
   credential: admin.credential.cert({
     projectId: process.env.FIREBASE_PROJECT_ID,
@@ -32,11 +23,14 @@ admin.initializeApp({
 const db = admin.firestore();
 const app = express(); // this is the express app
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+// Express routes
 // Create engine
 app.post('/api/engines', async (req, res) => {
   const engineData = req.body;
@@ -60,7 +54,7 @@ app.get('/api/engines', async (_, res) => {
     const engines = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     res.json(engines);
   } catch (err) {
-    console.error('🔥 Error fetching engines:', err);
+    console.error('Error fetching engines:', err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -77,10 +71,14 @@ app.get('/api/qr/:id', (req, res) => {
 // Update engine
 app.put('/api/engines/:id', async (req, res) => {
   const { id } = req.params;
-  const { model, year } = req.body;
+  const { model, year, serialNumber } = req.body;
 
   try {
-    await db.collection('engines').doc(id).update({ model, year });
+    await db.collection('engines').doc(id).update({
+      model,
+      year,
+      serialNumber,
+    });
     res.status(200).json({ message: 'Engine updated' });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -99,11 +97,6 @@ app.delete('/api/engines/:id', async (req, res) => {
   }
 });
 
-// QR code redirect
-app.get('/engine/:id', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'engine.html'));
-});
-
 // get engine on QR scan
 // Get a single engine by ID
 app.get('/api/engines/:id', async (req, res) => {
@@ -119,6 +112,11 @@ app.get('/api/engines/:id', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+
+// QR code redirect
+app.get('/engine/:id', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'engine.html'));
 });
 
 const PORT = process.env.PORT || 3000;

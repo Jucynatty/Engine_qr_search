@@ -37,7 +37,7 @@ const loadEngines = async () => {
       const li = document.createElement('li');
 
       li.innerHTML = `
-        <span><strong>${serialNumber}</strong></span>
+        <input type="text" value="${serialNumber || ''}" placeholder="Serial #" id="serial-${id}" />
         <img class="qr" src="/api/qr/${id}" width="80" />
         <span>Model:</span>
         <input type="text" value="${model || ''}" placeholder="Model" id="model-${id}" />
@@ -47,6 +47,10 @@ const loadEngines = async () => {
         <button onclick="deleteEngine('${id}')">🗑️</button>
       `;
 
+      if(serialNumber.length < 6 || serialNumber.length > 10) {
+        li.querySelector('input[type="text"]').style.border = '2px solid red';
+        li.querySelector('input[type="text"]').setAttribute('title', 'Serial Number must be between 6 and 10 characters');
+      }
       list.appendChild(li);
     });
   } catch (err) {
@@ -58,12 +62,13 @@ const loadEngines = async () => {
 window.updateEngine = async (id) => {
   const model = document.getElementById(`model-${id}`).value.trim();
   const year = document.getElementById(`year-${id}`).value.trim();
+  const serialNumber = document.getElementById(`serial-${id}`).value.trim();
 
   try {
     const res = await fetch(`/api/engines/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model, year }),
+      body: JSON.stringify({model, year,serialNumber}),
     });
 
     if (res.ok) {
