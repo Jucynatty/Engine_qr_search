@@ -13,13 +13,24 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Initialize Firebase Admin SDK
-const serviceAccount = JSON.parse(
-  readFileSync('./firebase-key.json', 'utf8')
-);
+// const serviceAccount = JSON.parse(
+//   readFileSync('./firebase-key.json', 'utf8')
+// );
+
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount),
+// });
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+  credential: admin.credential.cert({
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+    privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+  }),
 });
+
+console.log(`🚀 Server running on ${process.env.HOST_URL || 'http://localhost'}:${PORT}`);
+
 
 const db = admin.firestore();
 const app = express(); // this is the express app
