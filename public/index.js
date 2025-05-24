@@ -39,7 +39,9 @@ const loadEngines = async () => {
       li.innerHTML = `
         <span><strong>${serialNumber}</strong></span>
         <img class="qr" src="/api/qr/${id}" width="80" />
+        <span>Model:</span>
         <input type="text" value="${model || ''}" placeholder="Model" id="model-${id}" />
+        <span> year: </span>
         <input type="number" value="${year || ''}" placeholder="Year" id="year-${id}" />
         <button onclick="updateEngine('${id}')">✏️</button>
         <button onclick="deleteEngine('${id}')">🗑️</button>
