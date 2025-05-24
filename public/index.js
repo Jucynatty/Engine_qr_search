@@ -30,6 +30,7 @@ const loadEngines = async () => {
   try {
     const res = await fetch('/api/engines');
     const engines = await res.json();
+    console.log('Received from /api/engines:', engines);
 
     list.innerHTML = '';
     engines.forEach(({ id, serialNumber, model, year }) => {

@@ -60,10 +60,10 @@ app.get('/api/engines', async (_, res) => {
     const engines = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     res.json(engines);
   } catch (err) {
+    console.error('🔥 Error fetching engines:', err);
     res.status(500).json({ error: err.message });
   }
 });
-
 
 // Generate QR code for engine
 app.get('/api/qr/:id', (req, res) => {
@@ -123,6 +123,6 @@ app.get('/api/engines/:id', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on ${process.env.HOST_URL || 'http://localhost'}:${PORT}`);
+  console.log(`🚀 Server running on ${process.env.HOST_URL}:${PORT}`);
 });
 
