@@ -6,7 +6,7 @@
     <title>Engine Tracker</title>
     <style>
       :root {
-        --primary: #2c7a7b;
+        --primary: #ffef0a;
         --bg: #252525;
         --card: #ffffff;
         --accent: #319795;
@@ -59,6 +59,12 @@
         transition: background-color 0.2s ease;
       }
 
+      h2 {
+        color: white;
+        text-align: center;
+        color: var(--primary);
+      }
+
       form button:hover {
         background-color: var(--primary);
       }
@@ -68,6 +74,14 @@
         padding: 0;
         margin: 0 auto;
         max-width: 800px;
+      }
+
+      ul {
+        border: 4px solid #1b1b1b;
+        border-radius: 8px;
+        max-height: 500px;
+        overflow-y: scroll;
+        scrollbar-width: thin;
       }
 
       li {
@@ -94,11 +108,10 @@
       @media (max-width: 600px) {
         li {
           flex-direction: column;
-          align-items: flex-start;
+          align-items: center;
         }
 
         li img {
-          margin-left: 0;
         }
       }
     </style>
@@ -117,7 +130,7 @@
       <input type="number" id="year" min="0" placeholder="Year" />
       <button type="submit">Add Engine</button>
     </form>
-
+    <h2>Engine List</h2>
     <ul id="engine-list"></ul>
 
     <script src="index.js" type="module"></script>

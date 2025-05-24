@@ -92,7 +92,6 @@ app.delete('/api/engines/:id', async (req, res) => {
 });
 
 // QR code redirect
-
 app.get('/engine/:id', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'engine.html'));
 });
